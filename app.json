@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "crypto_ledger_app",
-    "slug": "crypto_ledger_app",
+    "name": "Crypto Ledger App",
+    "slug": "crypto-ledger-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -27,6 +27,8 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "Crypto Ledger App is the app version of Crypto Ledger, an open-source website that allows users to track their cryptocurrency trades.\n\nYou can see the website here: http://crypto-ledger.herokuapp.com/\n\nThe repository is available here: https://github.com/TMDStudios/crypto_ledger\n\nYou can also read more about the project on Publish0x: https://www.publish0x.com/open-source-projects?a=oQeZVWD6ep&tid=GitHub",
+    "githubUrl": "https://github.com/TMDStudios/crypto_ledger_app.git"
   }
 }
