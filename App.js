@@ -8,14 +8,26 @@ import {
   TextInput,
   View,
   StatusBar,
-  ScrollView,
+  FlatList,
+  TouchableOpacity,
 } from "react-native";
+import Header from "./components/header";
+import Coin from "./components/coin";
 
 export default function App() {
   const [name, setName] = useState("Bob");
   const [person, setPerson] = useState({ name: "Fred", age: 25 });
   const clickHandler = () => {
     setPerson({ name: "Tim", age: 42 });
+
+    return fetch("https://crypto-ledger.herokuapp.com/api/get-prices/")
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log(responseJson);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
   const [coin, setCoin] = useState([
     {
@@ -26,7 +38,7 @@ export default function App() {
       price24h: 89,
       priceBTC: 1,
       priceETH: 20000,
-      key: "1",
+      id: "1",
     },
     {
       symbol: "eth",
@@ -36,7 +48,7 @@ export default function App() {
       price24h: 214,
       priceBTC: 0.002,
       priceETH: 1,
-      key: "2",
+      id: "2",
     },
     {
       symbol: "xmr",
@@ -46,7 +58,7 @@ export default function App() {
       price24h: 71,
       priceBTC: 0.0001,
       priceETH: 0.01,
-      key: "3",
+      id: "3",
     },
     {
       symbol: "xmr",
@@ -56,7 +68,7 @@ export default function App() {
       price24h: 71,
       priceBTC: 0.0001,
       priceETH: 0.01,
-      key: "4",
+      id: "4",
     },
     {
       symbol: "xmr",
@@ -66,7 +78,7 @@ export default function App() {
       price24h: 71,
       priceBTC: 0.0001,
       priceETH: 0.01,
-      key: "5",
+      id: "5",
     },
     {
       symbol: "xmr",
@@ -76,7 +88,7 @@ export default function App() {
       price24h: 71,
       priceBTC: 0.0001,
       priceETH: 0.01,
-      key: "6",
+      id: "6",
     },
     {
       symbol: "xmr",
@@ -86,14 +98,17 @@ export default function App() {
       price24h: 71,
       priceBTC: 0.0001,
       priceETH: 0.01,
-      key: "7",
+      id: "7",
     },
   ]);
+  const pressHandler = (id) => {
+    setCoin((prevCoin) => {
+      return prevCoin.filter((coin) => coin.id != id);
+    });
+  };
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.header_text}>Crypto Ledger App</Text>
-      </View>
+      <Header />
       <View style={styles.body}>
         <Text>This is {name}</Text>
         <Text>
@@ -106,23 +121,13 @@ export default function App() {
           onChangeText={(val) => setName(val)}
         />
         <Text>The status bar is: {StatusBar.currentHeight}</Text>
-        <ScrollView>
-          {coin.map((item) => {
-            return (
-              <View key={item.key}>
-                <Text style={styles.list_head}>
-                  {item.name} - {item.price}
-                </Text>
-                <Text style={styles.list_body}>
-                  {item.price1h} - {item.price24h}
-                </Text>
-                <Text style={styles.list_body}>
-                  {item.priceBTC} - {item.priceETH}
-                </Text>
-              </View>
-            );
-          })}
-        </ScrollView>
+
+        <FlatList
+          // numColumns={2}
+          keyExtractor={(item) => item.id}
+          data={coin}
+          renderItem={({ item }) => <Coin item={item} pressHandler={pressHandler} />}
+        />
       </View>
       <View style={styles.buttonContainer}>
         <Button onPress={clickHandler} title="Update" />
@@ -137,17 +142,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
-  header: {
-    backgroundColor: "blue",
-    padding: 20,
-    height: 10,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  header_text: {
-    fontWeight: "bold",
-    color: "white",
-  },
+
   body: {
     backgroundColor: "gold",
     padding: 20,
@@ -161,15 +156,8 @@ const styles = StyleSheet.create({
     backgroundColor: "silver",
     color: "white",
     borderWidth: 2,
+    borderRadius: 10,
     borderColor: "#777",
     paddingLeft: 8,
-  },
-  list_head: {
-    paddingTop: 50,
-    color: "blue",
-    fontWeight: "bold",
-  },
-  list_body: {
-    color: "white",
   },
 });
