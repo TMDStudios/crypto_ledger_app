@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import {
-  Button,
+  Text,
   Platform,
   SafeAreaView,
   StyleSheet,
-  Text,
-  TextInput,
   View,
   StatusBar,
   FlatList,
@@ -13,94 +11,37 @@ import {
 } from "react-native";
 import Header from "./components/header";
 import Coin from "./components/coin";
+import priceData from "./data/priceData";
 
 export default function App() {
-  const [name, setName] = useState("Bob");
-  const [person, setPerson] = useState({ name: "Fred", age: 25 });
   const clickHandler = () => {
-    setPerson({ name: "Tim", age: 42 });
-
     return fetch("https://crypto-ledger.herokuapp.com/api/get-prices/")
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log(responseJson);
+        setCoin([]);
+        for (var i = 0; i < responseJson.length; i++) {
+          setCoin((prevCoins) => {
+            return [
+              {
+                symbol: responseJson[i].symbol,
+                name: responseJson[i].name,
+                price: responseJson[i].price,
+                price_1h: responseJson[i].price_1h,
+                price_24h: responseJson[i].price_24h,
+                price_btc: responseJson[i].price_btc,
+                price_eth: responseJson[i].price_eth,
+                id: responseJson[i].id,
+              },
+              ...prevCoins,
+            ];
+          });
+        }
       })
       .catch((error) => {
         console.log(error);
       });
   };
-  const [coin, setCoin] = useState([
-    {
-      symbol: "btc",
-      name: "Bitcoin",
-      price: 56000,
-      price1h: 10,
-      price24h: 89,
-      priceBTC: 1,
-      priceETH: 20000,
-      id: "1",
-    },
-    {
-      symbol: "eth",
-      name: "Ethereum",
-      price: 2800,
-      price1h: 6,
-      price24h: 214,
-      priceBTC: 0.002,
-      priceETH: 1,
-      id: "2",
-    },
-    {
-      symbol: "xmr",
-      name: "Monero",
-      price: 420,
-      price1h: 15,
-      price24h: 71,
-      priceBTC: 0.0001,
-      priceETH: 0.01,
-      id: "3",
-    },
-    {
-      symbol: "xmr",
-      name: "Monero4",
-      price: 420,
-      price1h: 15,
-      price24h: 71,
-      priceBTC: 0.0001,
-      priceETH: 0.01,
-      id: "4",
-    },
-    {
-      symbol: "xmr",
-      name: "Monero5",
-      price: 420,
-      price1h: 15,
-      price24h: 71,
-      priceBTC: 0.0001,
-      priceETH: 0.01,
-      id: "5",
-    },
-    {
-      symbol: "xmr",
-      name: "Monero6",
-      price: 420,
-      price1h: 15,
-      price24h: 71,
-      priceBTC: 0.0001,
-      priceETH: 0.01,
-      id: "6",
-    },
-    {
-      symbol: "xmr",
-      name: "Monero7",
-      price: 420,
-      price1h: 15,
-      price24h: 71,
-      priceBTC: 0.0001,
-      priceETH: 0.01,
-      id: "7",
-    },
-  ]);
+  const [coin, setCoin] = useState(priceData.Prices);
   const pressHandler = (id) => {
     setCoin((prevCoin) => {
       return prevCoin.filter((coin) => coin.id != id);
@@ -110,27 +51,17 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       <Header />
       <View style={styles.body}>
-        <Text>This is {name}</Text>
-        <Text>
-          His name is {person.name} and he is {person.age}
-        </Text>
-        <Text style={styles.header_text}>Enter name:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Type your name"
-          onChangeText={(val) => setName(val)}
-        />
-        <Text>The status bar is: {StatusBar.currentHeight}</Text>
-
         <FlatList
           // numColumns={2}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.id.toString()}
           data={coin}
           renderItem={({ item }) => <Coin item={item} pressHandler={pressHandler} />}
         />
       </View>
       <View style={styles.buttonContainer}>
-        <Button onPress={clickHandler} title="Update" />
+        <TouchableOpacity style={styles.button} onPress={clickHandler}>
+          <Text style={styles.buttonText}>Update</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -142,22 +73,27 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
-
   body: {
     backgroundColor: "gold",
     padding: 20,
+    paddingBottom: 5,
+    paddingTop: 5,
     flex: 1,
   },
   buttonContainer: {
     backgroundColor: "blue",
-    padding: 20,
+    padding: 16,
   },
-  input: {
-    backgroundColor: "silver",
+  buttonText: {
     color: "white",
-    borderWidth: 2,
+    fontWeight: "bold",
+    textAlign: "center",
+    margin: 12,
+  },
+  button: {
+    borderColor: "white",
+    borderWidth: 1,
+    backgroundColor: "gold",
     borderRadius: 10,
-    borderColor: "#777",
-    paddingLeft: 8,
   },
 });

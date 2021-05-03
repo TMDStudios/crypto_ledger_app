@@ -6,13 +6,13 @@ export default function Coin({ item, pressHandler }) {
     <TouchableOpacity style={styles.viewBox} onPress={() => pressHandler(item.id)}>
       <View style={styles.viewContent}>
         <Text style={styles.list_head}>
-          {item.name} - {item.price}
+          {item.name} | {item.price}
         </Text>
         <Text style={styles.list_body}>
-          {item.price1h} - {item.price24h}
+          {item.price_1h} | {item.price_24h}
         </Text>
         <Text style={styles.list_body}>
-          {item.priceBTC} - {item.priceETH}
+          {item.price_btc} | {item.price_eth}
         </Text>
       </View>
     </TouchableOpacity>
