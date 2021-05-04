@@ -14,9 +14,9 @@ import Coin from "../components/coin";
 import priceData from "../data/priceData";
 import { globalStyles } from "../styles/global";
 
-export default function Home() {
+export default function Home({ navigation }) {
   const clickHandler = () => {
-    fetch("https://crypto-ledger.herokuapp.com");
+    fetch("https://crypto-ledger.herokuapp.com/view-prices/");
     return fetch("https://crypto-ledger.herokuapp.com/api/get-prices/")
       .then((response) => response.json())
       .then((responseJson) => {
@@ -44,10 +44,11 @@ export default function Home() {
       });
   };
   const [coin, setCoin] = useState(priceData.Prices);
-  const pressHandler = (id) => {
-    setCoin((prevCoin) => {
-      return prevCoin.filter((coin) => coin.id != id);
-    });
+  const pressHandler = (item) => {
+    navigation.navigate("CoinDetails", item);
+    // setCoin((prevCoin) => {
+    //   return prevCoin.filter((coin) => coin.id != id);
+    // });
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -73,7 +74,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    // paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   body: {
     backgroundColor: "gold",

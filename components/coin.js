@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 
 export default function Coin({ item, pressHandler }) {
   return (
-    <TouchableOpacity style={styles.viewBox} onPress={() => pressHandler(item.id)}>
+    <TouchableOpacity style={styles.viewBox} onPress={() => pressHandler(item)}>
       <View style={styles.viewContent}>
         <Text style={styles.listHead}>
           {item.name} | {item.price}
