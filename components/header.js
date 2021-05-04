@@ -4,7 +4,7 @@ import { Text, View, StyleSheet } from "react-native";
 export default function Header() {
   return (
     <View style={styles.header}>
-      <Text style={styles.header_text}>Crypto Ledger App</Text>
+      <Text style={styles.headerText}>Crypto Ledger App</Text>
     </View>
   );
 }
@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  header_text: {
+  headerText: {
     fontWeight: "bold",
     color: "white",
   },

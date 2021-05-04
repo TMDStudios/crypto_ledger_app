@@ -5,13 +5,13 @@ export default function Coin({ item, pressHandler }) {
   return (
     <TouchableOpacity style={styles.viewBox} onPress={() => pressHandler(item.id)}>
       <View style={styles.viewContent}>
-        <Text style={styles.list_head}>
+        <Text style={styles.listHead}>
           {item.name} | {item.price}
         </Text>
-        <Text style={styles.list_body}>
+        <Text style={styles.listBody}>
           {item.price_1h} | {item.price_24h}
         </Text>
-        <Text style={styles.list_body}>
+        <Text style={styles.listBody}>
           {item.price_btc} | {item.price_eth}
         </Text>
       </View>
@@ -20,11 +20,11 @@ export default function Coin({ item, pressHandler }) {
 }
 
 const styles = StyleSheet.create({
-  list_head: {
+  listHead: {
     color: "silver",
     fontWeight: "bold",
   },
-  list_body: {
+  listBody: {
     color: "white",
   },
   viewBox: {
