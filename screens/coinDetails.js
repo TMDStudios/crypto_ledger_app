@@ -8,6 +8,7 @@ export default function CoinDetails({ navigation }) {
         <Text>Coin Details:</Text>
         <Text>Coin: {navigation.getParam("name")}</Text>
         <Text>Price: ${navigation.getParam("price")}</Text>
+        <Text>Price change 1h: ${navigation.getParam("price_1h")}</Text>
       </View>
     </View>
   );

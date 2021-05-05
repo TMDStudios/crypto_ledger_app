@@ -52,7 +52,7 @@ export default function Home({ navigation }) {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <Header />
+      {/* <Header /> */}
       <View style={styles.body}>
         <FlatList
           // numColumns={2}
@@ -73,18 +73,18 @@ export default function Home({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#222",
     // paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   body: {
-    backgroundColor: "gold",
-    padding: 20,
+    backgroundColor: "#222",
+    padding: 5,
     paddingBottom: 5,
     paddingTop: 5,
     flex: 1,
   },
   buttonContainer: {
     backgroundColor: "blue",
-    padding: 16,
+    padding: 8,
   },
 });

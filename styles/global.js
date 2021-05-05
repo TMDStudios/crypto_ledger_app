@@ -10,7 +10,9 @@ export const globalStyles = StyleSheet.create({
   button: {
     borderColor: "white",
     borderWidth: 1,
-    backgroundColor: "gold",
+    backgroundColor: "#333",
     borderRadius: 10,
+    marginLeft: 8,
+    marginRight: 8,
   },
 });

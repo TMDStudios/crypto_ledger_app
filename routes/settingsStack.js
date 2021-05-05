@@ -17,8 +17,8 @@ const screens = {
 const SettingsStack = createStackNavigator(screens, {
   defaultNavigationOptions: {
     headerStyle: {
-      backgroundColor: "silver",
-      height: StatusBar.currentHeight + 48,
+      backgroundColor: "blue",
+      height: 48,
     },
     headerTintColor: "white",
   },

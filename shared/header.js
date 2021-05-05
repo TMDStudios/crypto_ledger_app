@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 
 export default function Header({ navigation, title }) {
@@ -12,6 +12,7 @@ export default function Header({ navigation, title }) {
       <View>
         <Text style={styles.headerText}>{title}</Text>
       </View>
+      <Image style={styles.logo} source={require("../assets/tmdLogo.png")} />
     </View>
   );
 }
@@ -33,5 +34,11 @@ const styles = StyleSheet.create({
   icon: {
     position: "absolute",
     left: 16,
+  },
+  logo: {
+    position: "absolute",
+    right: 16,
+    width: 48,
+    resizeMode: "contain",
   },
 });
