@@ -9,7 +9,6 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import Header from "../components/header";
 import Coin from "../components/coin";
 import priceData from "../data/priceData";
 import { globalStyles } from "../styles/global";
