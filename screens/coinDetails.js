@@ -1,45 +1,100 @@
 import React from "react";
-import { View, StyleSheet, StatusBar, Text, TextInput, Button } from "react-native";
+import { View, StyleSheet, StatusBar, Text, TextInput, Button, Alert } from "react-native";
 import { useState } from "react/cjs/react.development";
 
 export default function CoinDetails({ navigation }) {
   const [amt, setAmt] = useState(0);
   function buyCoin() {
-    fetch(
-      "https://crypto-ledger.herokuapp.com/api/get-user-ledger/b08d0d5bc719b6b027fd2f9c4332d3ece9f868eb",
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: navigation.getParam("name") + " (" + navigation.getParam("symbol") + ")",
-          amount: amt,
-          custom_price: navigation.getParam("price"),
-        }),
+    if (amt > 0) {
+      if (navigation.getParam("current_price")) {
+        fetch(
+          "https://crypto-ledger.herokuapp.com/api/get-user-ledger/b08d0d5bc719b6b027fd2f9c4332d3ece9f868eb",
+          {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: navigation.getParam("name"),
+              amount: amt,
+              custom_price: 0,
+            }),
+          }
+        );
+      } else {
+        fetch(
+          "https://crypto-ledger.herokuapp.com/api/get-user-ledger/b08d0d5bc719b6b027fd2f9c4332d3ece9f868eb",
+          {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: navigation.getParam("name") + " (" + navigation.getParam("symbol") + ")",
+              amount: amt,
+              custom_price: 0,
+            }),
+          }
+        );
       }
-    );
+
+      Alert.alert("Coin added to ledger");
+      navigation.navigate("Home");
+    } else {
+      Alert.alert("Please enter a valid amount");
+    }
   }
-  return (
-    <View style={styles.container}>
-      <View style={styles.viewBox}>
+  if (navigation.getParam("current_price")) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.viewBox}>
+          <View style={styles.viewContent}>
+            <Text style={styles.text}>Coin Details:</Text>
+            <Text style={styles.text}>Coin: {navigation.getParam("name")}</Text>
+            <Text style={styles.text}>Price: ${navigation.getParam("current_price")}</Text>
+            <Text style={styles.text}>Amount: {navigation.getParam("total_amount")}</Text>
+            <Text style={styles.text}>VAL: {amt}</Text>
+          </View>
+        </View>
         <View style={styles.viewContent}>
-          <Text style={styles.text}>Coin Details:</Text>
-          <Text style={styles.text}>Coin: {navigation.getParam("name")}</Text>
-          <Text style={styles.text}>Price: ${navigation.getParam("price")}</Text>
-          <Text style={styles.text}>Price change 1h: ${navigation.getParam("price_1h")}</Text>
-          <Text style={styles.text}>VAL: {amt}</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Amount"
+            onChangeText={(val) => setAmt(val)}
+          />
+        </View>
+        <View style={styles.viewContent}>
+          <Button title="Buy" onPress={buyCoin} />
         </View>
       </View>
-      <View style={styles.viewContent}>
-        <TextInput style={styles.input} placeholder="Amount" onChangeText={(val) => setAmt(val)} />
+    );
+  } else {
+    return (
+      <View style={styles.container}>
+        <View style={styles.viewBox}>
+          <View style={styles.viewContent}>
+            <Text style={styles.text}>Coin Details:</Text>
+            <Text style={styles.text}>Coin: {navigation.getParam("name")}</Text>
+            <Text style={styles.text}>Price: ${navigation.getParam("price")}</Text>
+            <Text style={styles.text}>Price change 1h: ${navigation.getParam("price_1h")}</Text>
+            <Text style={styles.text}>VAL: {amt}</Text>
+          </View>
+        </View>
+        <View style={styles.viewContent}>
+          <TextInput
+            style={styles.input}
+            placeholder="Amount"
+            onChangeText={(val) => setAmt(val)}
+          />
+        </View>
+        <View style={styles.viewContent}>
+          <Button title="Buy" onPress={buyCoin} />
+        </View>
       </View>
-      <View style={styles.viewContent}>
-        <Button title="Buy" onPress={buyCoin} />
-      </View>
-    </View>
-  );
+    );
+  }
 }
 
 const styles = StyleSheet.create({

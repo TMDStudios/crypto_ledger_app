@@ -10,16 +10,13 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Coin from "../components/coin";
-import OwnedCoin from "../components/ownedCoin";
 import priceData from "../data/priceData";
 import { globalStyles } from "../styles/global";
 
-export default function Home({ navigation }) {
+export default function AllPrices({ navigation }) {
   const clickHandler = () => {
     fetch("https://crypto-ledger.herokuapp.com/view-prices/");
-    return fetch(
-      "https://crypto-ledger.herokuapp.com/api/get-user-ledger/b08d0d5bc719b6b027fd2f9c4332d3ece9f868eb"
-    )
+    return fetch("https://crypto-ledger.herokuapp.com/api/get-prices/")
       .then((response) => response.json())
       .then((responseJson) => {
         setCoin([]);
@@ -27,12 +24,13 @@ export default function Home({ navigation }) {
           setCoin((prevCoins) => {
             return [
               {
+                symbol: responseJson[i].symbol,
                 name: responseJson[i].name,
-                total_amount: responseJson[i].total_amount,
-                current_price: responseJson[i].current_price,
-                price_difference: responseJson[i].price_difference,
-                total_profit: responseJson[i].total_profit,
-                total_value: responseJson[i].total_value,
+                price: responseJson[i].price,
+                price_1h: responseJson[i].price_1h,
+                price_24h: responseJson[i].price_24h,
+                price_btc: responseJson[i].price_btc,
+                price_eth: responseJson[i].price_eth,
                 id: responseJson[i].id,
               },
               ...prevCoins,
@@ -44,7 +42,7 @@ export default function Home({ navigation }) {
         console.log(error);
       });
   };
-  const [ownedCoin, setCoin] = useState();
+  const [coin, setCoin] = useState(priceData.Prices);
   const pressHandler = (item) => {
     navigation.navigate("CoinDetails", item);
   };
@@ -55,8 +53,8 @@ export default function Home({ navigation }) {
         <FlatList
           // numColumns={2}
           keyExtractor={(item) => item.id.toString()}
-          data={ownedCoin}
-          renderItem={({ item }) => <OwnedCoin item={item} pressHandler={pressHandler} />}
+          data={coin}
+          renderItem={({ item }) => <Coin item={item} pressHandler={pressHandler} />}
         />
       </View>
       <View style={styles.buttonContainer}>
