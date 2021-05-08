@@ -46,6 +46,28 @@ export default function CoinDetails({ navigation }) {
       Alert.alert("Please enter a valid amount");
     }
   }
+  function sellCoin() {
+    if (amt > 0 && amt < parseFloat(navigation.getParam("total_amount"))) {
+      fetch(
+        "https://crypto-ledger.herokuapp.com/api/sell-coin-api/b08d0d5bc719b6b027fd2f9c4332d3ece9f868eb",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            coin_id: navigation.getParam("id"),
+            amount: amt,
+          }),
+        }
+      );
+      Alert.alert("Coin sold");
+      navigation.navigate("Home");
+    } else {
+      Alert.alert("Please enter a valid amount");
+    }
+  }
   if (navigation.getParam("current_price")) {
     return (
       <View style={styles.container}>
@@ -67,6 +89,9 @@ export default function CoinDetails({ navigation }) {
         </View>
         <View style={styles.viewContent}>
           <Button title="Buy" onPress={buyCoin} />
+        </View>
+        <View style={styles.viewContent}>
+          <Button title="Sell" onPress={sellCoin} />
         </View>
       </View>
     );
@@ -125,10 +150,10 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
   },
   viewContent: {
-    margin: 15,
+    margin: 10,
   },
   input: {
-    margin: 20,
+    margin: 10,
     color: "white",
     backgroundColor: "silver",
     borderWidth: 2,
