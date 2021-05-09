@@ -1,53 +1,75 @@
-import React, { useState } from "react";
-import {
-  Text,
-  Platform,
-  SafeAreaView,
-  StyleSheet,
-  View,
-  StatusBar,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
-import Coin from "../components/coin";
+import React, { useState, useEffect } from "react";
+import { Text, SafeAreaView, StyleSheet, View, FlatList, TouchableOpacity } from "react-native";
 import OwnedCoin from "../components/ownedCoin";
-import priceData from "../data/priceData";
 import { globalStyles } from "../styles/global";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Home({ navigation }) {
-  const clickHandler = () => {
-    fetch("https://crypto-ledger.herokuapp.com/view-prices/");
-    return fetch(
-      "https://crypto-ledger.herokuapp.com/api/get-user-ledger/b08d0d5bc719b6b027fd2f9c4332d3ece9f868eb"
-    )
-      .then((response) => response.json())
-      .then((responseJson) => {
-        setCoin([]);
-        for (var i = 0; i < responseJson.length; i++) {
-          setCoin((prevCoins) => {
-            return [
-              {
-                name: responseJson[i].name,
-                total_amount: responseJson[i].total_amount,
-                current_price: responseJson[i].current_price,
-                price_difference: responseJson[i].price_difference,
-                total_profit: responseJson[i].total_profit,
-                total_value: responseJson[i].total_value,
-                id: responseJson[i].id,
-              },
-              ...prevCoins,
-            ];
-          });
-        }
-      })
-      .catch((error) => {
-        console.log(error);
+  const [apiToken, setApiToken] = useState("");
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("apiToken");
+      if (value !== null) {
+        setApiToken(value);
+        getLedger(value);
+      }
+    } catch (e) {
+      console.log("getData Issue: " + e);
+    }
+  };
+
+  const getLedger = async (myToken) => {
+    try {
+      fetch("https://crypto-ledger.herokuapp.com/view-prices/");
+      const data = await fetch(
+        "https://crypto-ledger.herokuapp.com/api/get-user-ledger/" + myToken
+      );
+      const dataJSON = await data.json();
+      await updateLedger(dataJSON);
+    } catch (e) {
+      console.log("updateLedger Issue: " + e);
+    }
+  };
+
+  const updateLedger = async (dataJSON) => {
+    setCoin([]);
+    console.log("ledger UPDATED!");
+    for (var i = 0; i < dataJSON.length; i++) {
+      setCoin((prevCoins) => {
+        return [
+          {
+            name: dataJSON[i].name,
+            total_amount: dataJSON[i].total_amount,
+            current_price: dataJSON[i].current_price,
+            price_difference: dataJSON[i].price_difference,
+            total_profit: dataJSON[i].total_profit,
+            total_value: dataJSON[i].total_value,
+            id: dataJSON[i].id,
+          },
+          ...prevCoins,
+        ];
       });
+    }
+  };
+
+  const clickHandler = () => {
+    getLedger(apiToken);
   };
   const [ownedCoin, setCoin] = useState();
   const pressHandler = (item) => {
     navigation.navigate("CoinDetails", item);
   };
+
+  useEffect(() => {
+    getData();
+    console.log(apiToken);
+  }, [apiToken]);
+
+  useEffect(() => {
+    getLedger(apiToken);
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       {/* <Header /> */}

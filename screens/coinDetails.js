@@ -1,45 +1,52 @@
 import React from "react";
 import { View, StyleSheet, StatusBar, Text, TextInput, Button, Alert } from "react-native";
-import { useState } from "react/cjs/react.development";
+import { useState, useEffect } from "react/cjs/react.development";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function CoinDetails({ navigation }) {
   const [amt, setAmt] = useState(0);
+  const [apiToken, setApiToken] = useState("");
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("apiToken");
+      if (value !== null) {
+        setApiToken(value);
+      }
+    } catch (e) {
+      console.log("getData Issue: " + e);
+    }
+  };
+
   function buyCoin() {
     if (amt > 0) {
       if (navigation.getParam("current_price")) {
-        fetch(
-          "https://crypto-ledger.herokuapp.com/api/get-user-ledger/b08d0d5bc719b6b027fd2f9c4332d3ece9f868eb",
-          {
-            method: "POST",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              name: navigation.getParam("name"),
-              amount: amt,
-              custom_price: 0,
-            }),
-          }
-        );
+        fetch("https://crypto-ledger.herokuapp.com/api/get-user-ledger/" + apiToken, {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: navigation.getParam("name"),
+            amount: amt,
+            custom_price: 0,
+          }),
+        });
       } else {
-        fetch(
-          "https://crypto-ledger.herokuapp.com/api/get-user-ledger/b08d0d5bc719b6b027fd2f9c4332d3ece9f868eb",
-          {
-            method: "POST",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              name: navigation.getParam("name") + " (" + navigation.getParam("symbol") + ")",
-              amount: amt,
-              custom_price: 0,
-            }),
-          }
-        );
+        fetch("https://crypto-ledger.herokuapp.com/api/buy-coin-api/" + apiToken, {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: navigation.getParam("name") + " (" + navigation.getParam("symbol") + ")",
+            amount: amt,
+            custom_price: 0,
+          }),
+        });
       }
-
       Alert.alert("Coin added to ledger");
       navigation.navigate("Home");
     } else {
@@ -47,27 +54,31 @@ export default function CoinDetails({ navigation }) {
     }
   }
   function sellCoin() {
+    console.log("COIN ID: " + navigation.getParam("id"));
     if (amt > 0 && amt < parseFloat(navigation.getParam("total_amount"))) {
-      fetch(
-        "https://crypto-ledger.herokuapp.com/api/sell-coin-api/b08d0d5bc719b6b027fd2f9c4332d3ece9f868eb",
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            coin_id: navigation.getParam("id"),
-            amount: amt,
-          }),
-        }
-      );
+      fetch("https://crypto-ledger.herokuapp.com/api/sell-coin-api/" + apiToken, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          coin_id: navigation.getParam("id"),
+          amount: amt,
+        }),
+      });
       Alert.alert("Coin sold");
       navigation.navigate("Home");
     } else {
       Alert.alert("Please enter a valid amount");
     }
   }
+
+  useEffect(() => {
+    getData();
+    console.log(apiToken);
+  }, [apiToken]);
+
   if (navigation.getParam("current_price")) {
     return (
       <View style={styles.container}>
