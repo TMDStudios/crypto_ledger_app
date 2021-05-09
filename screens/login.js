@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   TextInput,
@@ -51,6 +51,13 @@ export default function Login({ navigation }) {
       console.log("Save Issue: " + e);
     }
   };
+
+  useEffect(() => {
+    getData();
+    if (apiToken.length > 0) {
+      navigation.navigate("Home");
+    }
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>

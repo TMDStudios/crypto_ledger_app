@@ -17,7 +17,6 @@ export default function CoinDetails({ navigation }) {
       console.log("getData Issue: " + e);
     }
   };
-
   function buyCoin() {
     if (amt > 0) {
       if (navigation.getParam("current_price")) {
@@ -48,7 +47,8 @@ export default function CoinDetails({ navigation }) {
         });
       }
       Alert.alert("Coin added to ledger");
-      navigation.navigate("Home");
+      fetch("https://crypto-ledger.herokuapp.com/view-prices/");
+      navigation.navigate("Home", { apiToken: "" });
     } else {
       Alert.alert("Please enter a valid amount");
     }

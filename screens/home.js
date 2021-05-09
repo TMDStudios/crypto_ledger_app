@@ -61,14 +61,26 @@ export default function Home({ navigation }) {
     navigation.navigate("CoinDetails", item);
   };
 
-  useEffect(() => {
-    getData();
-    console.log(apiToken);
-  }, [apiToken]);
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener("focus", () => {
+  //     if (apiToken.length > 0) {
+  //       getLedger(apiToken);
+  //     }
+  //   });
+  //   return unsubscribe;
+  // }, [navigation]);
 
   useEffect(() => {
-    getLedger(apiToken);
-  }, []);
+    getData();
+    console.log("API: " + apiToken);
+  }, [apiToken]);
+
+  // useEffect(() => {
+  //   console.log("Ready? " + isFocused);
+  //   if (apiToken.length > 0) {
+  //     getLedger(apiToken);
+  //   }
+  // }, [isFocused]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -80,6 +92,9 @@ export default function Home({ navigation }) {
           data={ownedCoin}
           renderItem={({ item }) => <OwnedCoin item={item} pressHandler={pressHandler} />}
         />
+      </View>
+      <View>
+        <Text style={globalStyles.buttonText}>API: {apiToken}</Text>
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={globalStyles.button} onPress={clickHandler}>
