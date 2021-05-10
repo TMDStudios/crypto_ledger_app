@@ -75,12 +75,12 @@ export default function Home({ navigation }) {
     console.log("API: " + apiToken);
   }, [apiToken]);
 
-  // useEffect(() => {
-  //   console.log("Ready? " + isFocused);
-  //   if (apiToken.length > 0) {
-  //     getLedger(apiToken);
-  //   }
-  // }, [isFocused]);
+  useEffect(() => {
+    console.log("Ready? ");
+    if (apiToken.length > 0 && ownedCoin.length > 0) {
+      getLedger(apiToken);
+    }
+  }, [navigation.getParam("apiToken", 0)]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -92,9 +92,6 @@ export default function Home({ navigation }) {
           data={ownedCoin}
           renderItem={({ item }) => <OwnedCoin item={item} pressHandler={pressHandler} />}
         />
-      </View>
-      <View>
-        <Text style={globalStyles.buttonText}>API: {apiToken}</Text>
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={globalStyles.button} onPress={clickHandler}>

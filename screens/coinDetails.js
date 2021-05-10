@@ -48,7 +48,9 @@ export default function CoinDetails({ navigation }) {
       }
       Alert.alert("Coin added to ledger");
       fetch("https://crypto-ledger.herokuapp.com/view-prices/");
-      navigation.navigate("Home", { apiToken: "" });
+      setTimeout(() => {
+        navigation.navigate("Home", { apiToken: Math.random() });
+      }, 500);
     } else {
       Alert.alert("Please enter a valid amount");
     }
@@ -68,7 +70,9 @@ export default function CoinDetails({ navigation }) {
         }),
       });
       Alert.alert("Coin sold");
-      navigation.navigate("Home");
+      setTimeout(() => {
+        navigation.navigate("Home", { apiToken: Math.random() });
+      }, 500);
     } else {
       Alert.alert("Please enter a valid amount");
     }

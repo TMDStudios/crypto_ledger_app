@@ -54,9 +54,11 @@ export default function Login({ navigation }) {
 
   useEffect(() => {
     getData();
-    if (apiToken.length > 0) {
-      navigation.navigate("Home");
-    }
+    setTimeout(() => {
+      if (apiToken.length > 0) {
+        navigation.navigate("Home");
+      }
+    }, 500);
   }, []);
 
   return (
