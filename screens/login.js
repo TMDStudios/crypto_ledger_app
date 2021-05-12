@@ -8,6 +8,7 @@ import {
   Button,
   TouchableOpacity,
   Alert,
+  Linking,
 } from "react-native";
 import { globalStyles } from "../styles/global";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -24,7 +25,6 @@ export default function Login({ navigation }) {
         "https://crypto-ledger.herokuapp.com/api/get-user-ledger/" + myKey
       );
       let json = await response.json();
-      console.log(json[0].owner);
       storeData();
       navigation.navigate("Home");
     } catch (e) {
@@ -74,13 +74,19 @@ export default function Login({ navigation }) {
             onChangeText={(val) => setApiToken(val)}
           />
         </View>
+        <View>
+          <Button
+            title="Register"
+            onPress={() => Linking.openURL("https://crypto-ledger.herokuapp.com/")}
+          />
+        </View>
       </View>
       <View>
         <Button title="Get KEY" onPress={getData} />
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={globalStyles.button} onPress={pressHandler}>
-          <Text style={globalStyles.buttonText}>Refresh</Text>
+          <Text style={globalStyles.buttonText}>Log In</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

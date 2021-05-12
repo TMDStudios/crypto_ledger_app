@@ -6,6 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Home({ navigation }) {
   const [apiToken, setApiToken] = useState("");
+  const [newLedger, setNewLedger] = useState(true);
 
   const getData = async () => {
     try {
@@ -51,6 +52,9 @@ export default function Home({ navigation }) {
         ];
       });
     }
+    if (dataJSON.length > 0) {
+      setNewLedger(false);
+    }
   };
 
   const clickHandler = () => {
@@ -61,15 +65,6 @@ export default function Home({ navigation }) {
     navigation.navigate("CoinDetails", item);
   };
 
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener("focus", () => {
-  //     if (apiToken.length > 0) {
-  //       getLedger(apiToken);
-  //     }
-  //   });
-  //   return unsubscribe;
-  // }, [navigation]);
-
   useEffect(() => {
     getData();
     console.log("API: " + apiToken);
@@ -79,27 +74,52 @@ export default function Home({ navigation }) {
     console.log("Ready? ");
     if (apiToken.length > 0 && ownedCoin.length > 0) {
       getLedger(apiToken);
+      setNewLedger(false);
     }
   }, [navigation.getParam("apiToken", 0)]);
 
-  return (
-    <SafeAreaView style={styles.container}>
-      {/* <Header /> */}
-      <View style={styles.body}>
-        <FlatList
-          // numColumns={2}
-          keyExtractor={(item) => item.id.toString()}
-          data={ownedCoin}
-          renderItem={({ item }) => <OwnedCoin item={item} pressHandler={pressHandler} />}
-        />
-      </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={globalStyles.button} onPress={clickHandler}>
-          <Text style={globalStyles.buttonText}>Update</Text>
+  if (newLedger) {
+    return (
+      <SafeAreaView style={styles.container}>
+        {/* <Header /> */}
+        <View style={styles.body}>
+          <Text style={globalStyles.buttonText}>Your ledger is empty</Text>
+        </View>
+        <TouchableOpacity
+          style={globalStyles.button}
+          onPress={() => {
+            navigation.navigate("AllPrices");
+          }}
+        >
+          <Text style={globalStyles.buttonText}>Add Coins</Text>
         </TouchableOpacity>
-      </View>
-    </SafeAreaView>
-  );
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={globalStyles.button} onPress={clickHandler}>
+            <Text style={globalStyles.buttonText}>Update</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  } else {
+    return (
+      <SafeAreaView style={styles.container}>
+        {/* <Header /> */}
+        <View style={styles.body}>
+          <FlatList
+            // numColumns={2}
+            keyExtractor={(item) => item.id.toString()}
+            data={ownedCoin}
+            renderItem={({ item }) => <OwnedCoin item={item} pressHandler={pressHandler} />}
+          />
+        </View>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={globalStyles.button} onPress={clickHandler}>
+            <Text style={globalStyles.buttonText}>Update</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
 }
 
 const styles = StyleSheet.create({

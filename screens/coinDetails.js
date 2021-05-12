@@ -20,7 +20,7 @@ export default function CoinDetails({ navigation }) {
   function buyCoin() {
     if (amt > 0) {
       if (navigation.getParam("current_price")) {
-        fetch("https://crypto-ledger.herokuapp.com/api/get-user-ledger/" + apiToken, {
+        fetch("https://crypto-ledger.herokuapp.com/api/buy-coin-api/" + apiToken, {
           method: "POST",
           headers: {
             Accept: "application/json",
@@ -57,7 +57,7 @@ export default function CoinDetails({ navigation }) {
   }
   function sellCoin() {
     console.log("COIN ID: " + navigation.getParam("id"));
-    if (amt > 0 && amt < parseFloat(navigation.getParam("total_amount"))) {
+    if (amt > 0 && amt <= parseFloat(navigation.getParam("total_amount"))) {
       fetch("https://crypto-ledger.herokuapp.com/api/sell-coin-api/" + apiToken, {
         method: "POST",
         headers: {
