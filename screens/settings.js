@@ -11,7 +11,7 @@ export default function Settings({ navigation }) {
   const storeData = async () => {
     try {
       await AsyncStorage.setItem("apiToken", "");
-      navigation.navigate("Login");
+      navigation.navigate("Login", { apiToken: "" });
     } catch (e) {
       console.log("Save Issue: " + e);
     }

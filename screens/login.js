@@ -59,7 +59,7 @@ export default function Login({ navigation }) {
         navigation.navigate("Home");
       }
     }, 500);
-  }, []);
+  }, [navigation.getParam("apiToken", apiToken)]);
 
   return (
     <SafeAreaView style={styles.container}>

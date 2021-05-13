@@ -58,7 +58,8 @@ export default function Home({ navigation }) {
   };
 
   const clickHandler = () => {
-    getLedger(apiToken);
+    navigation.navigate("AllPrices");
+    // getLedger(apiToken);
   };
   const [ownedCoin, setCoin] = useState();
   const pressHandler = (item) => {
@@ -76,7 +77,7 @@ export default function Home({ navigation }) {
       getLedger(apiToken);
       setNewLedger(false);
     }
-  }, [navigation.getParam("apiToken", 0)]);
+  }, [navigation.getParam("refreshVal", 0)]);
 
   if (newLedger) {
     return (
@@ -114,7 +115,7 @@ export default function Home({ navigation }) {
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={globalStyles.button} onPress={clickHandler}>
-            <Text style={globalStyles.buttonText}>Update</Text>
+            <Text style={globalStyles.buttonText}>Add Coin</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
