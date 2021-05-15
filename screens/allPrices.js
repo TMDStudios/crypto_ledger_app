@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   TextInput,
@@ -14,7 +14,11 @@ import priceData from "../data/priceData";
 import { globalStyles } from "../styles/global";
 
 export default function AllPrices({ navigation }) {
+  const [loaded, setLoaded] = useState(false);
   const clickHandler = () => {
+    if (searchEntry.length > 0) {
+      setLoaded(false);
+    }
     fetch("https://crypto-ledger.herokuapp.com/view-prices/");
     return fetch("https://crypto-ledger.herokuapp.com/api/get-prices/")
       .then((response) => response.json())
@@ -37,6 +41,7 @@ export default function AllPrices({ navigation }) {
             ];
           });
         }
+        console.log("Search Entry: " + searchEntry);
         if (searchEntry.length > 0) {
           coinFilter(searchEntry);
         }
@@ -50,54 +55,80 @@ export default function AllPrices({ navigation }) {
     navigation.navigate("CoinDetails", item);
   };
   const clearHandler = () => {
+    setLoaded(false);
     setSearchEntry("");
-    clickHandler();
   };
+  useEffect(() => {
+    if (searchEntry.length == 0 && !loaded) {
+      clickHandler();
+    }
+  }, [loaded]);
   const [searchEntry, setSearchEntry] = useState("");
   const coinFilter = (searchVal) => {
     setCoin((prevCoins) => {
-      console.log(coin.symbol);
       return prevCoins.filter(
         (coin) => coin.name.toLowerCase().indexOf(searchVal.toLowerCase()) > -1
       );
     });
   };
-  return (
-    <SafeAreaView style={styles.container}>
-      {/* <Header /> */}
-      <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Search"
-          onChangeText={(val) => setSearchEntry(val)}
-          value={searchEntry}
-        />
-        <View style={styles.searchButtonContainer}>
-          <TouchableOpacity style={styles.clearButton} onPress={clearHandler}>
-            <Text style={styles.searchButtonText}>Clear</Text>
+  useEffect(() => {
+    if (coin.length > 0) {
+      setLoaded(true);
+    }
+  }, [coin]);
+  if (loaded) {
+    return (
+      <SafeAreaView style={styles.container}>
+        {/* <Header /> */}
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Search"
+            onChangeText={(val) => setSearchEntry(val)}
+            value={searchEntry}
+          />
+          <View style={styles.searchButtonContainer}>
+            <TouchableOpacity style={styles.clearButton} onPress={clearHandler}>
+              <Text style={styles.searchButtonText}>Clear</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.searchButtonContainer}>
+            <TouchableOpacity style={styles.searchButton} onPress={clickHandler}>
+              <Text style={styles.searchButtonText}>Search</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={styles.body}>
+          <FlatList
+            // numColumns={2}
+            keyExtractor={(item) => item.id.toString()}
+            data={coin}
+            renderItem={({ item }) => <Coin item={item} pressHandler={pressHandler} />}
+          />
+        </View>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={globalStyles.button} onPress={clickHandler}>
+            <Text style={globalStyles.buttonText}>Update</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.searchButtonContainer}>
-          <TouchableOpacity style={styles.searchButton} onPress={clickHandler}>
-            <Text style={styles.searchButtonText}>Search</Text>
+      </SafeAreaView>
+    );
+  } else {
+    return (
+      <SafeAreaView style={styles.container}>
+        {/* <Header /> */}
+
+        <View style={styles.body}>
+          <Text style={globalStyles.buttonText}>Loading prices...</Text>
+        </View>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={globalStyles.button} onPress={clickHandler}>
+            <Text style={globalStyles.buttonText}>Update</Text>
           </TouchableOpacity>
         </View>
-      </View>
-      <View style={styles.body}>
-        <FlatList
-          // numColumns={2}
-          keyExtractor={(item) => item.id.toString()}
-          data={coin}
-          renderItem={({ item }) => <Coin item={item} pressHandler={pressHandler} />}
-        />
-      </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={globalStyles.button} onPress={clickHandler}>
-          <Text style={globalStyles.buttonText}>Update</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
-  );
+      </SafeAreaView>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -130,7 +161,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     color: "white",
-    backgroundColor: "#222",
+    backgroundColor: "#555",
     borderWidth: 2,
     borderColor: "white",
     marginLeft: 24,

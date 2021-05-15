@@ -15,6 +15,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Login({ navigation }) {
   const [apiToken, setApiToken] = useState("");
+  const [loaded, setLoaded] = useState(false);
   const pressHandler = () => {
     getToken(apiToken);
   };
