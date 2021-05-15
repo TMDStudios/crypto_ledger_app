@@ -32,6 +32,7 @@ export default function AllPrices({ navigation }) {
                 price_btc: responseJson[i].price_btc,
                 price_eth: responseJson[i].price_eth,
                 id: responseJson[i].id,
+                // color: price_1h > 0 ? "green" : "red",
               },
               ...prevCoins,
             ];

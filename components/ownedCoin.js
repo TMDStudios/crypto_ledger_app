@@ -2,8 +2,17 @@ import React from "react";
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 
 export default function OwnedCoin({ item, pressHandler }) {
+  const getColor = () => {
+    if (item.price_difference > 0) {
+      return styles.greenBorder;
+    } else if (item.price_difference < 0) {
+      return styles.redBorder;
+    } else {
+      return styles.whiteBorder;
+    }
+  };
   return (
-    <TouchableOpacity style={styles.viewBox} onPress={() => pressHandler(item)}>
+    <TouchableOpacity style={[styles.viewBox, getColor()]} onPress={() => pressHandler(item)}>
       <View style={styles.viewContent}>
         <Text style={styles.listHead}>{item.name}</Text>
         <Text style={styles.listBody}>Current Price: ${item.current_price.slice(0, -6)}</Text>
@@ -31,7 +40,6 @@ const styles = StyleSheet.create({
     color: "white",
   },
   viewBox: {
-    borderColor: "white",
     borderWidth: 3,
     backgroundColor: "#333",
     margin: 15,
@@ -44,5 +52,14 @@ const styles = StyleSheet.create({
   },
   viewContent: {
     margin: 15,
+  },
+  redBorder: {
+    borderColor: "red",
+  },
+  greenBorder: {
+    borderColor: "green",
+  },
+  whiteBorder: {
+    borderColor: "white",
   },
 });

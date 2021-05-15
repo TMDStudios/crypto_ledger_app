@@ -2,8 +2,17 @@ import React from "react";
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 
 export default function Coin({ item, pressHandler }) {
+  const getColor = () => {
+    if (item.price_1h > 0) {
+      return styles.greenBorder;
+    } else if (item.price_1h < 0) {
+      return styles.redBorder;
+    } else {
+      return styles.whiteBorder;
+    }
+  };
   return (
-    <TouchableOpacity style={styles.viewBox} onPress={() => pressHandler(item)}>
+    <TouchableOpacity style={[styles.viewBox, getColor()]} onPress={() => pressHandler(item)}>
       <View style={styles.viewContent}>
         <Text style={styles.listHead}>
           {item.name} ({item.symbol})
@@ -36,7 +45,6 @@ const styles = StyleSheet.create({
     color: "white",
   },
   viewBox: {
-    borderColor: "white",
     borderWidth: 3,
     backgroundColor: "#333",
     margin: 15,
@@ -49,5 +57,14 @@ const styles = StyleSheet.create({
   },
   viewContent: {
     margin: 15,
+  },
+  redBorder: {
+    borderColor: "red",
+  },
+  greenBorder: {
+    borderColor: "green",
+  },
+  whiteBorder: {
+    borderColor: "white",
   },
 });
