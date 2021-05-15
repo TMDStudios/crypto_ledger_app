@@ -39,6 +39,7 @@ export default function Home({ navigation }) {
     for (var i = 0; i < dataJSON.length; i++) {
       setCoin((prevCoins) => {
         return [
+          ...prevCoins,
           {
             name: dataJSON[i].name,
             total_amount: dataJSON[i].total_amount,
@@ -48,7 +49,6 @@ export default function Home({ navigation }) {
             total_value: dataJSON[i].total_value,
             id: dataJSON[i].id,
           },
-          ...prevCoins,
         ];
       });
     }

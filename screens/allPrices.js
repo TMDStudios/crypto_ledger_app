@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {
   Text,
-  Platform,
+  TextInput,
   SafeAreaView,
   StyleSheet,
   View,
@@ -32,11 +32,13 @@ export default function AllPrices({ navigation }) {
                 price_btc: responseJson[i].price_btc,
                 price_eth: responseJson[i].price_eth,
                 id: responseJson[i].id,
-                // color: price_1h > 0 ? "green" : "red",
               },
               ...prevCoins,
             ];
           });
+        }
+        if (searchEntry.length > 0) {
+          coinFilter(searchEntry);
         }
       })
       .catch((error) => {
@@ -47,9 +49,40 @@ export default function AllPrices({ navigation }) {
   const pressHandler = (item) => {
     navigation.navigate("CoinDetails", item);
   };
+  const clearHandler = () => {
+    setSearchEntry("");
+    clickHandler();
+  };
+  const [searchEntry, setSearchEntry] = useState("");
+  const coinFilter = (searchVal) => {
+    setCoin((prevCoins) => {
+      console.log(coin.symbol);
+      return prevCoins.filter(
+        (coin) => coin.name.toLowerCase().indexOf(searchVal.toLowerCase()) > -1
+      );
+    });
+  };
   return (
     <SafeAreaView style={styles.container}>
       {/* <Header /> */}
+      <View style={styles.searchContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Search"
+          onChangeText={(val) => setSearchEntry(val)}
+          value={searchEntry}
+        />
+        <View style={styles.searchButtonContainer}>
+          <TouchableOpacity style={styles.clearButton} onPress={clearHandler}>
+            <Text style={styles.searchButtonText}>Clear</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.searchButtonContainer}>
+          <TouchableOpacity style={styles.searchButton} onPress={clickHandler}>
+            <Text style={styles.searchButtonText}>Search</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
       <View style={styles.body}>
         <FlatList
           // numColumns={2}
@@ -83,5 +116,54 @@ const styles = StyleSheet.create({
   buttonContainer: {
     backgroundColor: "blue",
     padding: 8,
+  },
+  searchContainer: {
+    backgroundColor: "#111",
+    padding: 1,
+    paddingLeft: 16,
+    paddingRight: 16,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  input: {
+    marginTop: 10,
+    marginBottom: 10,
+    color: "white",
+    backgroundColor: "#222",
+    borderWidth: 2,
+    borderColor: "white",
+    marginLeft: 24,
+    paddingLeft: 24,
+    borderRadius: 8,
+    flex: 3,
+    height: 32,
+  },
+  searchButtonContainer: {
+    backgroundColor: "#111",
+    padding: 1,
+  },
+  clearButton: {
+    borderColor: "white",
+    borderWidth: 2,
+    backgroundColor: "#111",
+    borderRadius: 8,
+    height: 32,
+    width: 64,
+  },
+  searchButton: {
+    borderColor: "white",
+    borderWidth: 2,
+    backgroundColor: "#111",
+    borderRadius: 8,
+    height: 32,
+    marginRight: 24,
+    width: 64,
+  },
+  searchButtonText: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+    margin: 4,
   },
 });
