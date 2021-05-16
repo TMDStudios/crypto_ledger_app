@@ -58,40 +58,54 @@ export default function Login({ navigation }) {
     setTimeout(() => {
       if (apiToken.length > 0) {
         navigation.navigate("Home");
+        setLoaded(true);
       }
-    }, 500);
+    }, 1000);
   }, [navigation.getParam("apiToken", apiToken)]);
 
-  return (
-    <SafeAreaView style={styles.container}>
-      {/* <Header /> */}
-      <View style={styles.body}>
-        <View style={styles.viewContent}>
-          <Text style={globalStyles.buttonText}>Log in to continue</Text>
-          <Text style={globalStyles.buttonText}>API Key: {apiToken}</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="API Token"
-            onChangeText={(val) => setApiToken(val)}
-          />
+  if (loaded) {
+    return (
+      <SafeAreaView style={styles.container}>
+        {/* <Header /> */}
+        <View style={styles.body}>
+          <View style={styles.viewContent}>
+            <Text style={globalStyles.buttonText}>Log in to continue</Text>
+            <Text style={globalStyles.buttonText}>API Key: {apiToken}</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="API Token"
+              onChangeText={(val) => setApiToken(val)}
+            />
+          </View>
+          <View>
+            <Button
+              title="Register"
+              onPress={() => Linking.openURL("https://crypto-ledger.herokuapp.com/")}
+            />
+          </View>
         </View>
         <View>
-          <Button
-            title="Register"
-            onPress={() => Linking.openURL("https://crypto-ledger.herokuapp.com/")}
-          />
+          <Button title="Get KEY" onPress={getData} />
         </View>
-      </View>
-      <View>
-        <Button title="Get KEY" onPress={getData} />
-      </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={globalStyles.button} onPress={pressHandler}>
-          <Text style={globalStyles.buttonText}>Log In</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
-  );
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={globalStyles.button} onPress={pressHandler}>
+            <Text style={globalStyles.buttonText}>Log In</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  } else {
+    return (
+      <SafeAreaView style={styles.container}>
+        {/* <Header /> */}
+        <View style={styles.body}>
+          <View style={styles.viewContent}>
+            <Text style={globalStyles.buttonText}>Loading...</Text>
+          </View>
+        </View>
+      </SafeAreaView>
+    );
+  }
 }
 
 const styles = StyleSheet.create({

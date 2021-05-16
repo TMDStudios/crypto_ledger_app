@@ -41,6 +41,9 @@ export default function AllPrices({ navigation }) {
             ];
           });
         }
+        if (responseJson.length > 0) {
+          setLoaded(true);
+        }
         console.log("Search Entry: " + searchEntry);
         if (searchEntry.length > 0) {
           coinFilter(searchEntry);
@@ -71,11 +74,6 @@ export default function AllPrices({ navigation }) {
       );
     });
   };
-  useEffect(() => {
-    if (coin.length > 0) {
-      setLoaded(true);
-    }
-  }, [coin]);
   if (loaded) {
     return (
       <SafeAreaView style={styles.container}>

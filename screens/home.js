@@ -7,6 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function Home({ navigation }) {
   const [apiToken, setApiToken] = useState("");
   const [newLedger, setNewLedger] = useState(true);
+  const [displayMsg, setDisplayMsg] = useState("Loading Ledger...");
 
   const getData = async () => {
     try {
@@ -52,9 +53,13 @@ export default function Home({ navigation }) {
         ];
       });
     }
-    if (dataJSON.length > 0) {
-      setNewLedger(false);
-    }
+    setTimeout(() => {
+      if (dataJSON.length > 0) {
+        setNewLedger(false);
+      } else {
+        setDisplayMsg("Your ledger is empty");
+      }
+    }, 500);
   };
 
   const clickHandler = () => {
@@ -72,7 +77,6 @@ export default function Home({ navigation }) {
   }, [apiToken]);
 
   useEffect(() => {
-    console.log("Ready? ");
     if (apiToken.length > 0 && ownedCoin.length > 0) {
       getLedger(apiToken);
       setNewLedger(false);
@@ -84,7 +88,7 @@ export default function Home({ navigation }) {
       <SafeAreaView style={styles.container}>
         {/* <Header /> */}
         <View style={styles.body}>
-          <Text style={globalStyles.buttonText}>Your ledger is empty</Text>
+          <Text style={globalStyles.buttonText}>{displayMsg}</Text>
         </View>
         <TouchableOpacity
           style={globalStyles.button}
