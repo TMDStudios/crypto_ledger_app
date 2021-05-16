@@ -67,7 +67,6 @@ export default function Home({ navigation }) {
 
   const clickHandler = () => {
     navigation.navigate("AllPrices");
-    // getLedger(apiToken);
   };
   const [ownedCoin, setCoin] = useState();
   const pressHandler = (item) => {
@@ -89,21 +88,12 @@ export default function Home({ navigation }) {
   if (newLedger) {
     return (
       <SafeAreaView style={styles.container}>
-        {/* <Header /> */}
         <View style={styles.body}>
           <Text style={globalStyles.buttonText}>{displayMsg}</Text>
         </View>
-        <TouchableOpacity
-          style={globalStyles.button}
-          onPress={() => {
-            navigation.navigate("AllPrices");
-          }}
-        >
-          <Text style={globalStyles.buttonText}>Add Coins</Text>
-        </TouchableOpacity>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={globalStyles.button} onPress={clickHandler}>
-            <Text style={globalStyles.buttonText}>Update</Text>
+            <Text style={globalStyles.buttonText}>Add Coin</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -111,10 +101,8 @@ export default function Home({ navigation }) {
   } else {
     return (
       <SafeAreaView style={styles.container}>
-        {/* <Header /> */}
         <View style={styles.body}>
           <FlatList
-            // numColumns={2}
             keyExtractor={(item) => item.id.toString()}
             data={ownedCoin}
             renderItem={({ item }) => <OwnedCoin item={item} pressHandler={pressHandler} />}
@@ -134,7 +122,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#222",
-    // paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   body: {
     backgroundColor: "#222",

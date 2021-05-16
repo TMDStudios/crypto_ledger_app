@@ -5,12 +5,10 @@ import {
   SafeAreaView,
   StyleSheet,
   View,
-  StatusBar,
   FlatList,
   TouchableOpacity,
 } from "react-native";
 import Coin from "../components/coin";
-import priceData from "../data/priceData";
 import { globalStyles } from "../styles/global";
 
 export default function AllPrices({ navigation }) {
@@ -53,7 +51,7 @@ export default function AllPrices({ navigation }) {
         console.log(error);
       });
   };
-  const [coin, setCoin] = useState(priceData.Prices);
+  const [coin, setCoin] = useState();
   const pressHandler = (item) => {
     navigation.navigate("CoinDetails", item);
   };
@@ -64,8 +62,16 @@ export default function AllPrices({ navigation }) {
   useEffect(() => {
     if (searchEntry.length == 0 && !loaded) {
       clickHandler();
+      setLoadingText("Loading prices...");
     }
   }, [loaded]);
+  useEffect(() => {
+    if (!loaded) {
+      setTimeout(() => {
+        setLoadingText(loadingText + ".");
+      }, 100);
+    }
+  });
   const [searchEntry, setSearchEntry] = useState("");
   const coinFilter = (searchVal) => {
     setCoin((prevCoins) => {
@@ -74,10 +80,10 @@ export default function AllPrices({ navigation }) {
       );
     });
   };
+  const [loadingText, setLoadingText] = useState("Loading prices...");
   if (loaded) {
     return (
       <SafeAreaView style={styles.container}>
-        {/* <Header /> */}
         <View style={styles.searchContainer}>
           <TextInput
             style={styles.input}
@@ -98,7 +104,6 @@ export default function AllPrices({ navigation }) {
         </View>
         <View style={styles.body}>
           <FlatList
-            // numColumns={2}
             keyExtractor={(item) => item.id.toString()}
             data={coin}
             renderItem={({ item }) => <Coin item={item} pressHandler={pressHandler} />}
@@ -114,10 +119,8 @@ export default function AllPrices({ navigation }) {
   } else {
     return (
       <SafeAreaView style={styles.container}>
-        {/* <Header /> */}
-
         <View style={styles.body}>
-          <Text style={globalStyles.buttonText}>Loading prices...</Text>
+          <Text style={globalStyles.buttonText}>{loadingText}</Text>
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={globalStyles.button} onPress={clickHandler}>
@@ -133,7 +136,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#222",
-    // paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   body: {
     backgroundColor: "#222",

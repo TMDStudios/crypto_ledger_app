@@ -66,7 +66,6 @@ export default function Login({ navigation }) {
   if (loaded) {
     return (
       <SafeAreaView style={styles.container}>
-        {/* <Header /> */}
         <View style={styles.body}>
           <View style={styles.viewContent}>
             <Text style={globalStyles.buttonText}>Log in to continue</Text>
@@ -97,7 +96,6 @@ export default function Login({ navigation }) {
   } else {
     return (
       <SafeAreaView style={styles.container}>
-        {/* <Header /> */}
         <View style={styles.body}>
           <View style={styles.viewContent}>
             <Text style={globalStyles.buttonText}>Loading...</Text>
@@ -112,7 +110,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#222",
-    // paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   body: {
     backgroundColor: "#222",

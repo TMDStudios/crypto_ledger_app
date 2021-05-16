@@ -1,6 +1,5 @@
 import { createStackNavigator } from "react-navigation-stack";
 import Settings from "../screens/settings";
-import { StatusBar } from "react-native";
 import Header from "../shared/header";
 import React from "react";
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, StatusBar, Text, TextInput, Button, Alert } from "react-native";
+import { View, StyleSheet, Text, TextInput, Button, Alert } from "react-native";
 import { useState, useEffect } from "react/cjs/react.development";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -141,7 +141,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#222",
-    // paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   body: {
     padding: 20,
