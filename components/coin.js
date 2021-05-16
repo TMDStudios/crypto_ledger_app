@@ -2,7 +2,7 @@ import React from "react";
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 
 export default function Coin({ item, pressHandler }) {
-  const getColor = () => {
+  const color1h = () => {
     if (item.price_1h > 0) {
       return styles.greenCoin;
     } else if (item.price_1h < 0) {
@@ -11,24 +11,32 @@ export default function Coin({ item, pressHandler }) {
       return styles.whiteCoin;
     }
   };
+  const color24h = () => {
+    if (item.price_24h > 0) {
+      return styles.greenCoin;
+    } else if (item.price_24h < 0) {
+      return styles.redCoin;
+    } else {
+      return styles.whiteCoin;
+    }
+  };
   return (
-    <TouchableOpacity style={[styles.viewBox, getColor()]} onPress={() => pressHandler(item)}>
+    <TouchableOpacity style={[styles.viewBox, color1h()]} onPress={() => pressHandler(item)}>
       <View style={styles.viewContent}>
         <Text style={styles.listHead}>
           {item.name} ({item.symbol})
         </Text>
         <Text style={styles.listBody}>Current Price: ${item.price.slice(0, -6)}</Text>
-        <Text style={getColor()}>
-          Price change (1 hour): $
-          {item.price_1h.toString().slice(0, item.price_1h.toString().indexOf(".") + 3)}
+        <Text style={color1h()}>
+          Price change (1 hour):{" "}
+          {item.price_1h.toString().slice(0, item.price_1h.toString().indexOf(".") + 3)}%
         </Text>
-        <Text style={styles.listBody}>
-          Price change (24 hours): $
-          {item.price_24h.toString().slice(0, item.price_24h.toString().indexOf(".") + 3)}
+        <Text style={color24h()}>
+          Price change (24 hours):{" "}
+          {item.price_24h.toString().slice(0, item.price_24h.toString().indexOf(".") + 3)}%
         </Text>
-        <Text style={styles.listBody}>
-          {item.price_btc} | {item.price_eth}
-        </Text>
+        <Text style={styles.listBody}>Price (BTC): {item.price_btc}</Text>
+        <Text style={styles.listBody}>Price (ETH): {item.price_eth}</Text>
       </View>
     </TouchableOpacity>
   );

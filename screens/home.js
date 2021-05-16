@@ -56,10 +56,13 @@ export default function Home({ navigation }) {
     setTimeout(() => {
       if (dataJSON.length > 0) {
         setNewLedger(false);
-      } else {
-        setDisplayMsg("Your ledger is empty");
       }
     }, 500);
+    if (navigation.getParam("refreshVal", 0) == 0) {
+      setDisplayMsg("Your ledger is empty");
+    } else {
+      setDisplayMsg("Loading Ledger...");
+    }
   };
 
   const clickHandler = () => {
@@ -77,9 +80,9 @@ export default function Home({ navigation }) {
   }, [apiToken]);
 
   useEffect(() => {
-    if (apiToken.length > 0 && ownedCoin.length > 0) {
+    if (apiToken.length > 0) {
       getLedger(apiToken);
-      setNewLedger(false);
+      console.log("REF " + navigation.getParam("refreshVal", 0));
     }
   }, [navigation.getParam("refreshVal", 0)]);
 
